@@ -7,41 +7,45 @@ r = requests.get("https://www.mercadolivre.com.br/ofertas")
 
 soup = BeautifulSoup(r.text, "html.parser")
 
-# Pegando todos os itens da promoção
-items = soup.find_all("div", class_="promotion-item__container")
+# Procurando por todas as divs que sejam item
+items = soup.find_all("div", "promotion-item__description")
 
-l_promo = []
+l_promos = []
 
-# Iterando os itens
 for item in items:
-    item_content = item.find_all("div", class_="promotion-item__description")
-    title = item.find_all("p", class_="promotion-item__title")[0]
-    p_symbol = item.find_all("span", class_="andes-money-amount__currency-symbol")[0]
 
-    prices = item.find_all("span", class_="andes-money-amount__fraction")
+    # Buscando pelo titulo e pelos valores
+    title = item.find("p", "promotion-item__title").text
+    value_1 = int(item.find_all("span", "andes-money-amount__fraction")[0].text.replace(".", ""))
+    value_2 = int(item.find_all("span", "andes-money-amount__fraction")[1].text.replace(".", ""))
 
-    if len(prices) >= 2:
-        p_old = prices[0]
-        p_current = prices[1]
+    value_new, value_old = 0, 0
+
+    # Como nao sabemos a ordem dos valores
+    # Realize-se o processo de checagem
+    if value_1 > value_2:
+        value_old = value_1
+        value_new = value_2
     else:
-        p_old = -1
-        p_current = prices[0]
-
-    promo = {
-        "title": title.text,
-        "price_old": "Não Informado" if type(p_old) is int else p_old.text,
-        "price_current": p_current.text,
-        "price_symbol": p_symbol.text,
+        value_new = value_1
+        value_old = value_2
+    
+    # Armazena num dicionario e adiciona na lista
+    d_promo = {
+        "title": title,
+        "value_old": value_old,
+        "value_new": value_new
     }
 
-    l_promo.append(promo)
+    l_promos.append(d_promo)
 
+    # print(f"{title} | {value_old} | {value_new}")
 
-print("Vamos as promoções do dia!")
-for promo in l_promo:
-    print(
-        f"{promo['title']} de {promo['price_symbol']}{promo['price_old']} por {promo['price_symbol']}{promo['price_current']}"
-    )
+# Itera a lista de promocoes
+# for promo in l_promos:
+#     print(f"O produto {promo['title']} passou de R${promo['value_old']} para R${promo['value_new']}")
 
-df = pd.DataFrame.from_dict(l_promo, orient="columns")
-df.to_csv("promos.csv", index=False)
+# Salva em um arquivo csv usando a biblioteca Pandas
+df = pd.DataFrame.from_dict(l_promos)
+
+df.to_csv("ml_promo.csv", index=False)
