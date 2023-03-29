@@ -20,3 +20,15 @@
 2. Scrapy
 
 [Qual escolher?](https://coderslegacy.com/scrapy-vs-beautifulsoup/)
+
+## Comandos úteis Scrapy
+
+1. Criar um projeto
+
+`scrapy startproject <project_name>`
+
+2. Executar um spider individualmente
+
+`scrapy runspider <file_name>.py`
+
+
