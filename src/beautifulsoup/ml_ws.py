@@ -16,9 +16,16 @@ for item in items:
 
     # Buscando pelo titulo e pelos valores
     title = item.find("p", "promotion-item__title").text
+    
+    value_len = len(item.find_all("span", "andes-money-amount__fraction"))
+    
     value_1 = int(item.find_all("span", "andes-money-amount__fraction")[0].text.replace(".", ""))
-    value_2 = int(item.find_all("span", "andes-money-amount__fraction")[1].text.replace(".", ""))
-
+    
+    if value_len == 2:
+        value_2 = int(item.find_all("span", "andes-money-amount__fraction")[1].text.replace(".", ""))
+    else:
+        value_2 = -1
+    
     value_new, value_old = 0, 0
 
     # Como nao sabemos a ordem dos valores

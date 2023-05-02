@@ -1,5 +1,7 @@
 # Web Scraping Python Live
 
+Este repositório é base de uma série de vídeos publicado em meu canal no YouTube. Você pode conferir [clicando aqui](https://www.youtube.com/playlist?list=PLNfhWtySeuv8onTK9Q_Gn0O3vfvpLCf3H).
+
 ## Conceitos
 
 1. Web scraping
